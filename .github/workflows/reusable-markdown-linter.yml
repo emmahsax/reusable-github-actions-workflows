@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       # The file or command to run
-      LINTER_COMMAND: bin/markdown_linter.sh
+      LINTER_COMMAND:
         required: true
         type: string
 
