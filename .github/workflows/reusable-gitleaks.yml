@@ -28,7 +28,6 @@ on:
         type: string
       # Commit on default branch to start running GitLeaks from (required if RUN_DEFAULT_ON_ALL_COMMITS is 'false')
       RUN_DEFAULT_ON_SINCE_COMMIT:
-        default: ''
         required: false
         type: string
 

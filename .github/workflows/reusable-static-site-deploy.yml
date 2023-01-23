@@ -1,0 +1,78 @@
+on:
+  workflow_call:
+    inputs:
+      # Whether to move the SOURCE_FOLDER/SOURCE_SITE_FILES_FOLDER/* to SOURCE_FOLDER/
+      MOVE_SITE_FILES:
+        default: 'false'
+        required: false
+        type: string
+      # The folder to deploy from WITH a / at the end
+      SOURCE_FOLDER:
+        default: _site/
+        required: false
+        type: string
+      # The location of the site files WITH a / at the end
+      SOURCE_SITE_FILES_FOLDER:
+        default: site_files/
+        required: false
+        type: string
+      # The branch to deploy to
+      TARGET_BRANCH:
+        default: pages
+        required: false
+        type: string
+      # Whether to deploy to an external repository or not
+      TARGET_EXTERNAL_REPOSITORY:
+        default: 'false'
+        required: false
+        type: string
+      # The repository to deploy to IF not the same repository
+      TARGET_REPOSITORY_NAME:
+        required: false
+        type: string
+    secrets:
+      # This should be set in the GitHub repository settings IF deploying to external repository
+      PRIVATE_DEPLOY_KEY:
+        required: false
+
+jobs:
+  main:
+    if: github.REF == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 2147483647
+          ref: main
+      - name: Create Site Manually
+        run: mkdir ${{ inputs.SOURCE_FOLDER }}
+      - if: ${{ inputs.MOVE_SITE_FILES == 'true' }}
+        name: Move Site Files
+        run: |
+          mv ${{ inputs.SOURCE_SITE_FILES_FOLDER }}* ${{ inputs.SOURCE_FOLDER }}
+          rm -r ${{ inputs.SOURCE_FOLDER }}${{ inputs.SOURCE_SITE_FILES_FOLDER }} || echo 0
+      - if: ${{ inputs.TARGET_EXTERNAL_REPOSITORY == 'true' }}
+        name: Deploy Site to External Repository
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: ${{ inputs.TARGET_BRANCH }}
+          clean: true
+          commit-message: Deploy to ${{ inputs.TARGET_REPOSITORY_NAME }}
+          folder: ${{ inputs.SOURCE_FOLDER }}
+          git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
+          git-config-name: github-actions[bot]
+          repository-name: ${{ inputs.TARGET_REPOSITORY_NAME }}
+          silent: true
+          ssh-key: ${{ secrets.PRIVATE_DEPLOY_KEY }}
+      - if: ${{ inputs.TARGET_EXTERNAL_REPOSITORY == 'false' }}
+        name: Deploy Site to Internal Branch
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: ${{ inputs.TARGET_BRANCH }}
+          clean: true
+          commit-message: Deploy to ${{ github.REPOSITORY }}
+          folder: ${{ inputs.SOURCE_FOLDER }}
+          git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
+          git-config-name: github-actions[bot]
+          silent: true
