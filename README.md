@@ -1,6 +1,25 @@
 # Reusable GitHub Actions Workflows
 
-A place for me to store GitHub Actions reusable workflows for use in personal repos
+A place for me to store GitHub Actions reusable workflows for use in personal repos.
+
+To call one of these actions, create a `.github/workflows/WORKFLOW_NAME.yml` file and put this in it (example):
+
+```yaml
+name: Workflow Name
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  workflow-name:
+    uses: emmahsax/reusable-github-actions-workflows/.github/workflows/reusable-workflow-name.yml@main
+    with:
+      ARG_1: arg 1
+      ARG_2: arg 2
+    secrets:
+      PRIVATE_ARG: ${{ secrets.PRIVATE_ARG }}
+```
 
 ---
 
