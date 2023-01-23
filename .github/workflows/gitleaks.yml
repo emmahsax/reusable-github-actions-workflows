@@ -1,6 +1,3 @@
-name: GitLeaks
-
-# Override desired times to run this workflow
 on:
   workflow_call:
     inputs:
