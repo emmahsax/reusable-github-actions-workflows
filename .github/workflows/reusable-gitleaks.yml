@@ -33,7 +33,7 @@ on:
         type: string
 
 jobs:
-  gitleaks:
+  '':
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
