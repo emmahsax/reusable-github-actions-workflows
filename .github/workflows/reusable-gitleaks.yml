@@ -33,7 +33,7 @@ on:
         type: string
 
 jobs:
-  '':
+  main:
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
