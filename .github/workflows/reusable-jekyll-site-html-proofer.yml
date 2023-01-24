@@ -5,6 +5,9 @@ on:
       COMMAND:
         required: true
         type: string
+      JOB_CALLER_NAME:
+        required: true
+        type: string
 
 jobs:
   main:
@@ -40,7 +43,7 @@ jobs:
         uses: Tiryoh/gha-jobid-action@v0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          job_name: ${{ github.JOB }}
+          job_name: ${{inputs.JOB_CALLER_NAME}} / ${{ github.JOB }}
       - if: github.EVENT_NAME == 'pull_request' && env.PROOFER_STATUS == 'fail'
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v2
