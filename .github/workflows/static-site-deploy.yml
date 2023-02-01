@@ -37,7 +37,6 @@ on:
 
 jobs:
   main:
-    if: github.REF == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
