@@ -54,7 +54,7 @@ jobs:
         with:
           comment_tag: execution
           message: |
-            Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
+            :warning: Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
       - if: github.event_name == 'pull_request' && env.proofer_status == 'success'
         name: Pull Request Success Comment
@@ -62,4 +62,4 @@ jobs:
         with:
           comment_tag: execution
           message: |
-            Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
+            :white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
