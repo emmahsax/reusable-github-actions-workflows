@@ -21,7 +21,7 @@ jobs:
       private_arg: ${{ secrets.private_arg }}
 ```
 
-To call a composite step, run the following in the `steps` section of the workflow:
+To call a composite step, add the following in the `steps` section of the workflow:
 
 ```yaml
 - name: Step Name
