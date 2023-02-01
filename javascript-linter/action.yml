@@ -26,3 +26,4 @@ runs:
         registry-url: https://registry.npmjs.org
 
     - run: npm install standard --save-dev && ${{ inputs.linter_command }}
+      shell: bash
