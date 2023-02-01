@@ -2,7 +2,7 @@ on:
   workflow_call:
     inputs:
       move_site_files:
-        default: false
+        default: true
         description: Whether to move the source_folder/source_site_files_folder/* to source_folder/*
         required: false
         type: boolean
