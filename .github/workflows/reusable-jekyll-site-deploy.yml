@@ -3,9 +3,9 @@ on:
     inputs:
       # Whether to move the source_folder/source_site_files_folder/* to source_folder/
       move_site_files:
-        default: 'false'
+        default: false
         required: false
-        type: string
+        type: boolean
       # The folder to deploy from WITH a / at the end
       source_folder:
         default: _site/
@@ -23,9 +23,9 @@ on:
         type: string
       # Whether to deploy to an external repository or not
       target_external_repository:
-        default: 'false'
+        default: false
         required: false
-        type: string
+        type: boolean
       # The repository to deploy to IF not the same repository
       target_repository_name:
         required: false
@@ -54,14 +54,14 @@ jobs:
       - name: Jekyll Build
         run: JEKYLL_ENV=production bundle exec jekyll build --destination ${{ inputs.source_folder }}
 
-      - if: ${{ inputs.move_site_files == 'true' }}
+      - if: ${{ inputs.move_site_files }}
         name: Move Site Files
         uses: emmahsax/reusable-github-actions-workflows/move-up-nested-files@test
         with:
           dir: ${{ inputs.source_folder }}
           nested_dir: ${{ inputs.source_site_files_folder }}
 
-      - if: ${{ inputs.target_external_repository == 'true' }}
+      - if: ${{ inputs.target_external_repository }}
         name: Deploy Site to External Repository
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -75,7 +75,7 @@ jobs:
           silent: true
           ssh-key: ${{ secrets.private_deploy_key }}
 
-      - if: ${{ inputs.target_external_repository == 'false' }}
+      - if: ${{ inputs.target_external_repository == false }}
         name: Deploy Site to Internal Branch
         uses: JamesIves/github-pages-deploy-action@v4
         with:

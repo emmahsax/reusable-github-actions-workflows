@@ -23,10 +23,10 @@ on:
         type: string
       # Whether to run GitLeaks from default branch on all git history, or since a certain commit specified below
       run_default_on_all_commits:
-        default: 'true'
+        default: true
         required: false
         type: string
-      # Commit on default branch to start running GitLeaks from (required if run_default_on_all_commits is 'false')
+      # Commit on default branch to start running GitLeaks from (required if run_default_on_all_commits is false)
       run_default_on_since_commit:
         required: false
         type: string
@@ -59,7 +59,7 @@ jobs:
             if [[ ${{ github.sha }} != $DEFAULT_BRANCH_COMMIT ]]; then # This branch is not the default branch
               echo "command=${COMMAND} --log-opts='^origin/main ${{ github.sha }}'" >> $GITHUB_ENV
             else
-              if [[ ${{ inputs.run_default_on_all_commits }} == 'true' ]]; then # Running on all commits in git history
+              if [[ ${{ inputs.run_default_on_all_commits }} ]]; then # Running on all commits in git history
                 echo "command=${COMMAND}" >> $GITHUB_ENV
               else
                 echo "command=${COMMAND} --log-opts='${{ inputs.run_default_on_since_commit }}..${{ github.sha }}'" >> $GITHUB_ENV
