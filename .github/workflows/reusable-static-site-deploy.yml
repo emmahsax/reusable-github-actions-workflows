@@ -25,7 +25,7 @@ on:
       target_external_repository:
         default: false
         required: false
-        type: string
+        type: boolean
       # The repository to deploy to IF not the same repository
       target_repository_name:
         required: false
