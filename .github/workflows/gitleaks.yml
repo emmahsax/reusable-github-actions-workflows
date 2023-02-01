@@ -1,11 +1,85 @@
-name: GitLeaks
-
 on:
-  pull_request:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      gitleaks_config_commits:
+        default: "[]"
+        description: A list of commits to ignore when running GitLeaks
+        required: false
+        type: string
+      gitleaks_config_paths:
+        default: "[]"
+        description: A list of file paths to ignore when running GitLeaks
+        required: false
+        type: string
+      gitleaks_config_regexes:
+        default: "[]"
+        description: A list of regexes or secrets to ignore when running GitLeaks
+        required: false
+        type: string
+      gitleaks_version:
+        default: v8.15.2
+        description: The version of GitLeaks to run
+        required: false
+        type: string
+      run_default_on_all_commits:
+        default: true
+        description: On the default branch, whether to run GitLeaks on all git history or since a certain commit specified below
+        required: false
+        type: boolean
+      run_default_on_since_commit:
+        description: On the default branch, the commit to start running GitLeaks from (required if run_default_on_all_commits is false)
+        required: false
+        type: string
 
 jobs:
-  gitleaks:
-    uses: ./gitleaks.yml
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set GitLeaks Config File
+        run: |
+          curl -H "Accept: application/vnd.github.v3.raw" \
+            -L "https://api.github.com/repos/zricethezav/gitleaks/contents/config/gitleaks.toml?ref=${{ inputs.gitleaks_version }}" \
+            >> ${{ github.workspace }}/original.toml
+          sed "/\[allowlist\]/,/^$/d" ${{ github.workspace }}/original.toml >> ${{ github.workspace }}/gitleaks.toml
+          echo "[allowlist]" >> ${{ github.workspace }}/gitleaks.toml
+          echo "commits = ${{ inputs.gitleaks_config_commits }}" >> ${{ github.workspace }}/gitleaks.toml
+          echo "paths = ${{ inputs.gitleaks_config_paths }}" >> ${{ github.workspace }}/gitleaks.toml
+          echo "regexes = ${{ inputs.gitleaks_config_regexes }}" >> ${{ github.workspace }}/gitleaks.toml
+
+      - name: Determine GitLeaks Command
+        run: |
+          DEFAULT_BRANCH_COMMIT=$(git log origin/main | head -1 | sed 's/commit //')
+          COMMAND="gitleaks detect --verbose --config='/app/gitleaks.toml' --source='/app'"
+          if [[ ${{ github.ref }} == 'refs/heads'* ]]; then # This is a branch, not a pull request
+            if [[ ${{ github.sha }} != $DEFAULT_BRANCH_COMMIT ]]; then # This branch is not the default branch
+              echo "command=${COMMAND} --log-opts='^origin/main ${{ github.sha }}'" >> $GITHUB_ENV
+            else
+              if [[ ${{ inputs.run_default_on_all_commits }} ]]; then # Running on all commits in git history
+                echo "command=${COMMAND}" >> $GITHUB_ENV
+              else
+                echo "command=${COMMAND} --log-opts='${{ inputs.run_default_on_since_commit }}..${{ github.sha }}'" >> $GITHUB_ENV
+              fi
+            fi
+          else
+            echo "command=${COMMAND} --log-opts='^origin/main ${{ github.event.pull_request.head.sha }}'" >> $GITHUB_ENV
+          fi
+
+      - name: Run GitLeaks
+        run: |
+          echo "Running: ${{ env.command }}"
+          docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"
+
+mv reusable-gitleaks.yml gitleaks.yml
+mv reusable-javascript-linter.yml javascript-linter.yml
+mv reusable-jekyll-site-build.yml jekyll-site-build.yml
+mv reusable-jekyll-site-deploy.yml jekyll-site-deploy.yml
+mv reusable-jekyll-site-html-proofer.yml jekyll-site-html-proofer.yml
+mv reusable-markdown-linter.yml markdown-linter.yml
+mv reusable-rspec.yml rspec.yml
+mv reusable-rubocop.yml rubocop.yml
+mv reusable-static-site-deploy.yml static-site-deploy.yml
