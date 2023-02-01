@@ -1,0 +1,65 @@
+on:
+  workflow_call:
+    inputs:
+      caller_job_name:
+        default: jekyll-site-html-proofer
+        description: The name of the job that calls this one
+        required: false
+        type: string
+      command:
+        description: The file or command to run
+        required: true
+        type: string
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set_branch_variable
+        name: Set Branch Variable
+        uses: emmahsax/github-actions/set-branch-variable@main
+
+      - name: Check Out Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.set_branch_variable.outputs.branch }}
+
+      - name: Install Ruby and Bundle Install
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Jekyll Build
+        run: JEKYLL_ENV=production bundle exec jekyll build --destination _site
+
+      - name: HTML Proofer
+        run: |
+          if ${{ inputs.command }}; then
+            echo "proofer_status=success" >> $GITHUB_ENV
+          else
+            echo "proofer_status=fail" >> $GITHUB_ENV
+          fi
+
+      - id: job_log_url
+        if: github.event_name == 'pull_request'
+        name: Get Job Log URL
+        uses: Tiryoh/gha-jobid-action@v0
+        with:
+          github_token: ${{ secrets.github_token }}
+          job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
+
+      - if: github.event_name == 'pull_request' && env.proofer_status == 'fail'
+        name: Pull Request Failure Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: execution
+          message: |
+            :warning: Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
+
+      - if: github.event_name == 'pull_request' && env.proofer_status == 'success'
+        name: Pull Request Success Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: execution
+          message: |
+            :white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}

@@ -1,0 +1,18 @@
+name: Move Up Nested Files
+description: Move folders from dir/nested_dir/* to dir/*
+
+inputs:
+  dir:
+    description: The higher level directory to move files into
+    required: true
+  nested_dir:
+    description: The nested directory within dir/ that files began in
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: |
+        mv ${{ inputs.nested_dir }}* ${{ inputs.dir }}
+        rm -r ${{ inputs.dir }}${{ inputs.nested_dir }} || echo 0
+      shell: bash

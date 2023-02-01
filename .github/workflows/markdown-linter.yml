@@ -1,0 +1,28 @@
+on:
+  workflow_call:
+    inputs:
+      linter_command:
+        description: The file or command to run
+        required: true
+        type: string
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set_branch_variable
+        name: Set Branch Variable
+        uses: emmahsax/github-actions/set-branch-variable@main
+
+      - name: Check Out Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.set_branch_variable.outputs.branch }}
+
+      - name: Install Ruby and Bundle Install
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Markdown Linter
+        run: ${{ inputs.linter_command }}

@@ -1,0 +1,34 @@
+on:
+  workflow_call:
+    inputs:
+      linter_command:
+        description: The file or command to run
+        required: true
+        type: string
+      node_version:
+        default: 18
+        description: The Node version to use
+        required: false
+        type: number
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - id: set_branch_variable
+        name: Set Branch Variable
+        uses: emmahsax/github-actions/set-branch-variable@main
+
+      - name: Check Out Code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ steps.set_branch_variable.outputs.branch }}
+
+      - name: Install Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node_version }}
+          registry-url: https://registry.npmjs.org
+
+      - name: Javascript Linter
+        run: npm install standard --save-dev && ${{ inputs.linter_command }}
