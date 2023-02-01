@@ -73,13 +73,3 @@ jobs:
         run: |
           echo "Running: ${{ env.command }}"
           docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"
-
-mv reusable-gitleaks.yml gitleaks.yml
-mv reusable-javascript-linter.yml javascript-linter.yml
-mv reusable-jekyll-site-build.yml jekyll-site-build.yml
-mv reusable-jekyll-site-deploy.yml jekyll-site-deploy.yml
-mv reusable-jekyll-site-html-proofer.yml jekyll-site-html-proofer.yml
-mv reusable-markdown-linter.yml markdown-linter.yml
-mv reusable-rspec.yml rspec.yml
-mv reusable-rubocop.yml rubocop.yml
-mv reusable-static-site-deploy.yml static-site-deploy.yml
