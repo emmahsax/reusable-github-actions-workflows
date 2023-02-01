@@ -2,11 +2,11 @@ on:
   workflow_call:
     inputs:
       # The file or command to run
-      LINTER_COMMAND:
+      linter_command:
         required: true
         type: string
       # The Node version to use
-      NODE_VERSION:
+      node_version:
         required: false
         default: 18
         type: number
@@ -15,21 +15,20 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - name: Set Branch Variable
-        run: |
-          if [[ ${{ github.REF }} == 'refs/heads'* ]]; then # This is a branch, not a pull request
-            echo "BRANCH=$(echo ${{ github.REF }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
-          else
-            echo "BRANCH=$(echo ${{ github.HEAD_REF }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_ENV
-          fi
+      - id: set_branch_variable
+        name: Set Branch Variable
+        uses: emmahsax/reusable-github-actions-workflows/set-branch-variable@test
+
       - name: Check Out Code
         uses: actions/checkout@v3
         with:
-          ref: ${{ env.BRANCH }}
+          ref: ${{ steps.set_branch_variable.outputs.branch }}
+
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ inputs.NODE_VERSION }}
+          node-version: ${{ inputs.node_version }}
           registry-url: https://registry.npmjs.org
+
       - name: Javascript Linter
-        run: npm install standard --save-dev && ${{ inputs.LINTER_COMMAND }}
+        run: npm install standard --save-dev && ${{ inputs.linter_command }}

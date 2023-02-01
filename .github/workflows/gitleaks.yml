@@ -8,7 +8,4 @@ on:
 
 jobs:
   gitleaks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: GitLeaks
-        uses: emmahsax/reusable-github-actions-workflows/gitleaks@test
+    uses: ./.github/workflows/reusable-gitleaks.yml
