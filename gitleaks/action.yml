@@ -1,5 +1,6 @@
 name: GitLeaks
 description: Scan repository or pull request for committed secrets
+
 inputs:
   gitleaks_config_commits:
     default: "[]"
@@ -28,13 +29,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Check Out Code
-      uses: actions/checkout@v3
+    - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - name: Set GitLeaks Config File
-      shell: bash
-      run: |
+
+    - run: |
         curl -H "Accept: application/vnd.github.v3.raw" \
           -L "https://api.github.com/repos/zricethezav/gitleaks/contents/config/gitleaks.toml?ref=${{ inputs.gitleaks_version }}" \
           >> ${{ github.workspace }}/original.toml
@@ -43,9 +42,9 @@ runs:
         echo "commits = ${{ inputs.gitleaks_config_commits }}" >> ${{ github.workspace }}/gitleaks.toml
         echo "paths = ${{ inputs.gitleaks_config_paths }}" >> ${{ github.workspace }}/gitleaks.toml
         echo "regexes = ${{ inputs.gitleaks_config_regexes }}" >> ${{ github.workspace }}/gitleaks.toml
-    - name: Determine GitLeaks Command
       shell: bash
-      run: |
+
+    - run: |
         DEFAULT_BRANCH_COMMIT=$(git log origin/main | head -1 | sed 's/commit //')
         COMMAND="gitleaks detect --verbose --config='/app/gitleaks.toml' --source='/app'"
         if [[ ${{ github.ref }} == 'refs/heads'* ]]; then # This is a branch, not a pull request
@@ -61,8 +60,9 @@ runs:
         else
           echo "command=${COMMAND} --log-opts='^origin/main ${{ github.event.pull_request.head.sha }}'" >> $GITHUB_ENV
         fi
-    - name: GitLeaks
       shell: bash
-      run: |
+
+    - run: |
         echo "Running: ${{ env.command }}"
         docker run --rm -v $(pwd):/app -i --entrypoint /bin/bash zricethezav/gitleaks:${{ inputs.gitleaks_version }} -c "${{ env.command }}"
+      shell: bash

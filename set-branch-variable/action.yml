@@ -1,0 +1,19 @@
+name: Set Branch Variable
+description: Set the current branch as an output variable
+
+outputs:
+  branch:
+    description: The name of the branch
+    value: ${{ steps.set-branch-variable.outputs.branch }}
+
+runs:
+  using: composite
+  steps:
+    - id: set-branch-variable
+      run: |
+        if [[ ${{ github.ref }} == 'refs/heads'* ]]; then # This is a branch, not a pull request
+          echo "branch=$(echo ${{ github.ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_OUTPUT
+        else
+          echo "branch=$(echo ${{ github.head_ref }} | sed -E 's|refs/[a-zA-Z]+/||')" >> $GITHUB_OUTPUT
+        fi
+      shell: bash
