@@ -8,4 +8,4 @@ on:
 
 jobs:
   gitleaks:
-    uses: ./.github/workflows/reusable-gitleaks.yml
+    uses: emmahsax/reusable-github-actions-workflows/gitleaks@test
