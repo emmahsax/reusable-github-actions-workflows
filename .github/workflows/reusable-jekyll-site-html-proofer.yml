@@ -1,13 +1,13 @@
 on:
   workflow_call:
     inputs:
-      # The name of the job that calls this one
       caller_job_name:
         default: jekyll-site-html-proofer
+        description: The name of the job that calls this one
         required: false
         type: string
-      # The file or command to run
       command:
+        description: The file or command to run
         required: true
         type: string
 

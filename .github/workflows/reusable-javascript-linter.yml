@@ -1,14 +1,14 @@
 on:
   workflow_call:
     inputs:
-      # The file or command to run
       linter_command:
+        description: The file or command to run
         required: true
         type: string
-      # The Node version to use
       node_version:
-        required: false
         default: 18
+        description: The Node version to use
+        required: false
         type: number
 
 jobs:

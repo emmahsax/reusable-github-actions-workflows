@@ -1,34 +1,33 @@
 on:
   workflow_call:
     inputs:
-      # A list of commits to ignore when running GitLeaks
       gitleaks_config_commits:
-        description: A list of commits to ignore when running GitLeaks
         default: "[]"
+        description: A list of commits to ignore when running GitLeaks
         required: false
         type: string
-      # A list of file paths to ignore when running GitLeaks
       gitleaks_config_paths:
         default: "[]"
+        description: A list of file paths to ignore when running GitLeaks
         required: false
         type: string
-      # A list of regexes or secrets to ignore when running GitLeaks
       gitleaks_config_regexes:
         default: "[]"
+        description: A list of regexes or secrets to ignore when running GitLeaks
         required: false
         type: string
-      # The version of GitLeaks to run
       gitleaks_version:
         default: v8.15.2
+        description: The version of GitLeaks to run
         required: false
         type: string
-      # Whether to run GitLeaks from default branch on all git history, or since a certain commit specified below
       run_default_on_all_commits:
         default: true
+        description: On the default branch, whether to run GitLeaks on all git history or since a certain commit specified below
         required: false
         type: boolean
-      # Commit on default branch to start running GitLeaks from (required if run_default_on_all_commits is false)
       run_default_on_since_commit:
+        description: On the default branch, the commit to start running GitLeaks from (required if run_default_on_all_commits is false)
         required: false
         type: string
 

@@ -1,38 +1,38 @@
 on:
   workflow_call:
     inputs:
-      # Whether to move the source_folder/source_site_files_folder/* to source_folder/
       move_site_files:
         default: false
+        description: Whether to move the source_folder/source_site_files_folder/* to source_folder/*
         required: false
         type: boolean
-      # The folder to deploy from WITH a / at the end
       source_folder:
         default: _site/
+        description: The folder to deploy from with a / at the end
         required: false
         type: string
-      # The location of the site files WITH a / at the end
       source_site_files_folder:
         default: site_files/
+        description: The location of the site files with a / at the end
         required: false
         type: string
-      # The branch to deploy to
       target_branch:
         default: pages
+        description: The branch to deploy to
         required: false
         type: string
-      # Whether to deploy to an external repository or not
       target_external_repository:
         default: false
+        description: Whether to deploy to an external repository or not
         required: false
         type: boolean
-      # The repository to deploy to IF not the same repository
       target_repository_name:
+        description: The repository to deploy to if not the same repository
         required: false
         type: string
     secrets:
-      # This should be set in the GitHub repository settings IF deploying to external repository
       private_deploy_key:
+        description: This should be set in the GitHub repository settings if deploying to external repository
         required: false
 
 jobs:
