@@ -50,7 +50,7 @@ jobs:
 
       - if: ${{ inputs.move_site_files }}
         name: Move Site Files
-        uses: emmahsax/github-actions/move-up-nested-files@test
+        uses: emmahsax/github-actions/move-up-nested-files@main
         with:
           dir: ${{ inputs.source_folder }}
           nested_dir: ${{ inputs.source_site_files_folder }}
