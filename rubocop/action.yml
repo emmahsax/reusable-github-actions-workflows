@@ -1,5 +1,5 @@
-name: Rspec
-description: Run Rspec
+name: Rubocop
+description: Run Rubocop
 runs:
   using: composite
   steps:
@@ -17,6 +17,5 @@ runs:
         with:
           bundler-cache: true
 
-      - name: Rspec
-        run: bundle exec rspec
-        shell: bash
+      - name: Rubocop
+        run: bundle exec rubocop
