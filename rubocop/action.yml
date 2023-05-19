@@ -19,3 +19,4 @@ runs:
 
       - name: Rubocop
         run: bundle exec rubocop
+        shell: bash
