@@ -27,8 +27,8 @@ on:
         required: false
         type: boolean
       target_repository_name:
-        description: The repository to deploy to if not the same repository
-        required: false
+        description: The repository to deploy to
+        required: true
         type: string
     secrets:
       private_deploy_key:

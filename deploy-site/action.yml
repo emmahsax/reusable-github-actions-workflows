@@ -15,7 +15,7 @@ inputs:
     description: Whether to deploy to an external repository or not
     required: true
   target_repository_name:
-    description: The repository to deploy to if not the same repository
+    description: The repository to deploy to
     required: true
 
 runs:
@@ -39,7 +39,7 @@ runs:
       with:
         branch: ${{ inputs.target_branch }}
         clean: true
-        commit-message: Deploy to ${{ github.repository }}
+        commit-message: Deploy to ${{ inputs.target_repository_name }}
         folder: ${{ inputs.source_folder }}
         git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
         git-config-name: github-actions[bot]
