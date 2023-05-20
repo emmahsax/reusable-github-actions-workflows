@@ -22,7 +22,6 @@ runs:
   using: composite
   steps:
     - if: ${{ inputs.target_external_repository }}
-      name: Deploy Site to External Repository
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: ${{ inputs.target_branch }}
@@ -36,7 +35,6 @@ runs:
         ssh-key: ${{ secrets.private_deploy_key }}
 
     - if: ${{ inputs.target_external_repository == false }}
-      name: Deploy Site to Internal Branch
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         branch: ${{ inputs.target_branch }}

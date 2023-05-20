@@ -40,11 +40,12 @@ jobs:
             echo "proofer_status=failure" >> $GITHUB_ENV
           fi
 
-      - name: Write Status Comment
-        uses: emmahsax/github-actions/write-status-comment@test_composite
+      - if: github.event_name == "pull_request"
+        name: Write Status PR Comment
+        uses: emmahsax/github-actions/write-status-pr-comment@test_composite
         with:
           caller_job_name: ${{ inputs.caller_job_name }}
           github_token: ${{ secrets.github_token }}
-          message_failure: ':warning: Latest run of Jekyll Site HTML Proofer **failed**:'
-          message_success: ':white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**:'
+          message_failure: ":warning: Latest run of Jekyll Site HTML Proofer **failed**:"
+          message_success: ":white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**:"
           status: ${{ env.proofer_status }}

@@ -1,4 +1,4 @@
-name: Write Status Comment
+name: Write Status PR Comment
 description: Write a comment to a pull request based on the status of another job
 
 inputs:
@@ -22,21 +22,18 @@ runs:
   using: composite
   steps:
     - id: job_log_url
-      name: Get Job Log URL
       uses: Tiryoh/gha-jobid-action@v0
       with:
         github_token: ${{ inputs.github_token }}
         job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
     - if: ${{ inputs.status }} == 'failure'
-      name: Pull Request Failure Comment
       uses: thollander/actions-comment-pull-request@v2
       with:
         comment_tag: execution
         message: ${{ inputs.message_failure }} ${{ steps.job_log_url.outputs.html_url }}
 
     - if: ${{ inputs.status }} == 'success'
-      name: Pull Request Success Comment
       uses: thollander/actions-comment-pull-request@v2
       with:
         comment_tag: execution
