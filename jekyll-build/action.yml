@@ -1,0 +1,13 @@
+name: Jekyll Build
+description: Build a Jekyll site
+
+inputs:
+  target_dir:
+    description: The directory to build the Jekyll site to
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - run: JEKYLL_ENV=production bundle exec jekyll build --destination ${{ inputs.target_dir }}
+      shell: bash
