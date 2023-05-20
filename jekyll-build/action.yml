@@ -3,8 +3,9 @@ description: Build a Jekyll site
 
 inputs:
   target_dir:
+    default: _site/
     description: The directory to build the Jekyll site to
-    required: true
+    required: false
 
 runs:
   using: composite
