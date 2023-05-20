@@ -32,7 +32,7 @@ runs:
         git-config-name: github-actions[bot]
         repository-name: ${{ inputs.target_repository_name }}
         silent: true
-        ssh-key: ${{ secrets.private_deploy_key }}
+        ssh-key: ${{ inputs.private_deploy_key }}
 
     - if: ${{ inputs.target_external_repository == false }}
       uses: JamesIves/github-pages-deploy-action@v4
