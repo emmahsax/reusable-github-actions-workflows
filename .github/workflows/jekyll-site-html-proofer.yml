@@ -40,7 +40,7 @@ jobs:
             echo "proofer_status=failure" >> $GITHUB_ENV
           fi
 
-      - if: github.event_name == "pull_request"
+      - if: github.event_name == 'pull_request'
         name: Write Status PR Comment
         uses: emmahsax/github-actions/write-status-pr-comment@test_composite
         with:
