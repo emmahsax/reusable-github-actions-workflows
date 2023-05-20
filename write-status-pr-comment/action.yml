@@ -15,7 +15,7 @@ inputs:
     description: The success message to use
     required: true
   status:
-    description: The status to report on (either 'success' or 'failure')
+    description: The status to report on (either "success" or "failure")
     required: true
 
 runs:
@@ -27,13 +27,13 @@ runs:
         github_token: ${{ inputs.github_token }}
         job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
-    - if: ${{ inputs.status }} == 'failure'
+    - if: ${{ inputs.status }} == "failure"
       uses: thollander/actions-comment-pull-request@v2
       with:
         comment_tag: execution
         message: ${{ inputs.message_failure }} ${{ steps.job_log_url.outputs.html_url }}
 
-    - if: ${{ inputs.status }} == 'success'
+    - if: ${{ inputs.status }} == "success"
       uses: thollander/actions-comment-pull-request@v2
       with:
         comment_tag: execution
