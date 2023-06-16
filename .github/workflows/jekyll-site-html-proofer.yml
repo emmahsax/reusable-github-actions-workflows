@@ -1,6 +1,10 @@
 on:
   workflow_call:
     inputs:
+      branch:
+        description: The branch to check out
+        required: true
+        type: string
       caller_job_name:
         default: jekyll-site-html-proofer
         description: The name of the job that calls this one
@@ -15,14 +19,10 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - id: set_branch_variable
-        name: Set Branch Variable
-        uses: emmahsax/github-actions/set-branch-variable@main
-
       - name: Check Out Code
         uses: actions/checkout@v3
         with:
-          ref: ${{ steps.set_branch_variable.outputs.branch }}
+          ref: ${{ inputs.branch }}
 
       - name: Install Ruby and Bundle Install
         uses: ruby/setup-ruby@v1
