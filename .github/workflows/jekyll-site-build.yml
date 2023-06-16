@@ -5,6 +5,7 @@ on:
         description: The branch to check out
         required: true
         type: string
+
 jobs:
   main:
     runs-on: ubuntu-latest
