@@ -5,11 +5,12 @@ on:
         description: The branch to check out
         required: true
         type: string
-      build_command:
-        required: true
-        type: string
       go_version:
         description: The version of Go to build
+        required: true
+        type: string
+      release_version:
+        description: The version tag to use when releasing
         required: true
         type: string
 
@@ -28,5 +29,11 @@ jobs:
           github_token: ${{ secrets.github_token }}
           go_version: ${{ inputs.go_version }}
 
-      - name: Build
-        run: ${{ inputs.build_command }}
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v4
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          args: release --clean
+          distribution: goreleaser
+          version: ${{ inputs.release_version }}
