@@ -31,7 +31,7 @@ jobs:
       - name: Check Out Code
         uses: actions/checkout@v3
         with:
-          ref: test_release # main
+          ref: main
 
       - name: Set up Go
         uses: emmahsax/github-actions/setup-go@main
