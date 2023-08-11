@@ -14,6 +14,11 @@ on:
         description: The version of Go to build
         required: false
         type: number
+      staticcheck:
+        default: true
+        description: Whether to run staticcheck or not
+        required: false
+        type: boolean
       test_command:
         default: go test -v ./...
         required: false
@@ -53,7 +58,8 @@ jobs:
           gofmt-path: ./
           gofmt-flags: '-l -d'
 
-      - name: Go Staticcheck
+      - if: ${{ inputs.staticcheck }}
+        name: Go Staticcheck
         uses: dominikh/staticcheck-action@v1.3.0
         with:
           install-go: false
