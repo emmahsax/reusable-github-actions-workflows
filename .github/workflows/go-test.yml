@@ -14,6 +14,14 @@ on:
         description: The version of Go to build
         required: false
         type: number
+      test_command:
+        default: go test -v ./...
+        required: false
+        type: string
+      vet_command:
+        default: go vet -v ./...
+        required: false
+        type: string
 
 jobs:
   main:
@@ -32,3 +40,22 @@ jobs:
 
       - name: Go Build
         run: ${{ inputs.build_command }}
+
+      - name: Go Test
+        run: ${{ inputs.test_command }}
+
+      - name: Go Vet
+        run: ${{ inputs.vet_command }}
+
+      - name: Go FMT
+        uses: Jerome1337/gofmt-action@v1.0.5
+        with:
+          gofmt-path: ./
+          gofmt-flags: '-l -d'
+
+      - name: Go Staticcheck
+        uses: dominikh/staticcheck-action@v1.3.0
+        with:
+          install-go: false
+          cache-key: ${{ inputs.go_version }}
+          working-directory: ./
