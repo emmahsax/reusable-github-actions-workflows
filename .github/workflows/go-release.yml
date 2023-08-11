@@ -45,7 +45,7 @@ jobs:
       - name: Set Tag Name
         id: tag_name
         run: |
-          if [[ ${{ inputs.tag_name }} == "" ]]; then
+          if [[ "${{ inputs.tag_name }}" == "" ]]; then
             CALCULATED_SHA=$(git rev-parse --short ${{ github.sha }})
             echo "tag_name=$CALCULATED_SHA" >> $GITHUB_OUTPUT
           else
