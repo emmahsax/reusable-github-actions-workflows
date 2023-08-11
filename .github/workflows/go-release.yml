@@ -2,7 +2,8 @@ on:
   workflow_call:
     inputs:
       build_command:
-        required: true
+        default: go build -v ./...
+        required: false
         type: string
       files:
         default: ""
