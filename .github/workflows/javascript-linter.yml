@@ -10,7 +10,7 @@ on:
         required: true
         type: string
       node_version:
-        default: 18
+        default: 20
         description: The Node version to use
         required: false
         type: number
@@ -25,7 +25,7 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.node_version }}
           registry-url: https://registry.npmjs.org
