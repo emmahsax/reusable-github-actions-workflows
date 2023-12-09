@@ -5,6 +5,11 @@ on:
         description: The branch to check out
         required: true
         type: string
+      caller_job_name:
+        default: markdown-linter
+        description: The name of the job that calls this one
+        required: false
+        type: string
       linter_command:
         description: The file or command to run
         required: true
