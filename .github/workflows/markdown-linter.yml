@@ -9,6 +9,11 @@ on:
         description: The file or command to run
         required: true
         type: string
+      notify_pr:
+        default: 'false'
+        description: Whether to notify the PR about failures/success runs
+        required: false
+        type: string
 
 jobs:
   main:
@@ -25,4 +30,38 @@ jobs:
           bundler-cache: true
 
       - name: Markdown Linter
+        if: inputs.notify_pr == 'false'
         run: ${{ inputs.linter_command }}
+
+      - name: Markdown Linter
+        if: inputs.notify_pr == 'true'
+        run: |
+          if ${{ inputs.linter_command }}; then
+            echo "linter_status=success" >> $GITHUB_ENV
+          else
+            echo "linter_status=fail" >> $GITHUB_ENV
+          fi
+
+      - id: job_log_url
+        if: github.event_name == 'pull_request' && inputs.notify_pr == 'true'
+        name: Get Job Log URL
+        uses: Tiryoh/gha-jobid-action@v0
+        with:
+          github_token: ${{ secrets.github_token }}
+          job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
+
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.linter_status == 'fail'
+        name: Pull Request Failure Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: markdown-linter
+          message: |
+            :warning: Latest run of Markdown Linter **failed**: ${{ steps.job_log_url.outputs.html_url }}
+
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.linter_status == 'success'
+        name: Pull Request Success Comment
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          comment_tag: markdown-linter
+          message: |
+            :white_check_mark: Latest run of Markdown Linter **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
