@@ -62,7 +62,7 @@ jobs:
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: html-proofer
+          comment_tag: jekyll-site-html-proofer
           message: |
             :warning: Latest run of Jekyll Site HTML Proofer **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
@@ -70,6 +70,6 @@ jobs:
         name: Pull Request Success Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
-          comment_tag: html-proofer
+          comment_tag: jekyll-site-html-proofer
           message: |
             :white_check_mark: Latest run of Jekyll Site HTML Proofer **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
