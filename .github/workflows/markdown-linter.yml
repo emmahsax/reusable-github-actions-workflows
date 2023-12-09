@@ -43,7 +43,7 @@ jobs:
               echo "status=fail" >> $GITHUB_ENV
             fi
           else
-            ${{ inputs.command }}
+            ${{ inputs.linter_command }}
           fi
 
       - id: job_log_url
