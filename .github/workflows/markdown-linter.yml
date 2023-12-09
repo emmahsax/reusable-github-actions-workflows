@@ -35,16 +35,15 @@ jobs:
           bundler-cache: true
 
       - name: Markdown Linter
-        if: inputs.notify_pr == 'false'
-        run: ${{ inputs.linter_command }}
-
-      - name: Markdown Linter
-        if: inputs.notify_pr == 'true'
         run: |
-          if ${{ inputs.linter_command }}; then
-            echo "linter_status=success" >> $GITHUB_ENV
+          if ${{ inputs.notify_pr }} == 'true'; then
+            if ${{ inputs.linter_command }}; then
+              echo "status=success" >> $GITHUB_ENV
+            else
+              echo "status=fail" >> $GITHUB_ENV
+            fi
           else
-            echo "linter_status=fail" >> $GITHUB_ENV
+            ${{ inputs.command }}
           fi
 
       - id: job_log_url
@@ -55,7 +54,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           job_name: ${{ inputs.caller_job_name }} / ${{ github.job }}
 
-      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.linter_status == 'fail'
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
@@ -63,7 +62,7 @@ jobs:
           message: |
             :warning: Latest run of Markdown Linter **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
-      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.linter_status == 'success'
+      - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
         uses: thollander/actions-comment-pull-request@v2
         with:
