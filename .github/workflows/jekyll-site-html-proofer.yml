@@ -15,7 +15,7 @@ on:
         required: true
         type: string
       notify_pr:
-        default: 'false'
+        default: false
         description: Whether to notify the PR about failures/success runs
         required: false
         type: string
@@ -39,7 +39,7 @@ jobs:
 
       - name: HTML Proofer
         run: |
-          if ${{ inputs.notify_pr }} == 'true'; then
+          if ${{ inputs.notify_pr }}; then
             if ${{ inputs.command }}; then
               echo "status=success" >> $GITHUB_ENV
             else
