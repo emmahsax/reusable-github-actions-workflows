@@ -17,7 +17,7 @@ on:
         required: false
         type: string
       gitleaks_version:
-        default: v8.17.0
+        default: v8.18.1
         description: The version of GitLeaks to run
         required: false
         type: string
