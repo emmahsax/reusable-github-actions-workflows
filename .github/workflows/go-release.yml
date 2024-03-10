@@ -58,7 +58,7 @@ jobs:
 
       - if: ${{ inputs.upload }}
         name: GitHub Release & Upload Assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           github_token: ${{ secrets.github_token }}
         with:
@@ -70,7 +70,7 @@ jobs:
 
       - if: ${{ inputs.upload == false }}
         name: GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           github_token: ${{ secrets.github_token }}
         with:
