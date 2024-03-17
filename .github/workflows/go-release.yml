@@ -24,12 +24,18 @@ on:
         description: Whether to upload assets during the release
         required: true
         type: boolean
+    outputs:
+      tag_name:
+        description: The tag name the release is under
+        value: ${{ jobs.main.outputs.tag_name }}
 
 permissions:
   contents: write
 
 jobs:
   main:
+    outputs:
+      tag_name: ${{ steps.tag_name.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
@@ -64,6 +70,7 @@ jobs:
         with:
           draft: false
           files: ${{ inputs.files }}
+          generate_release_notes: true
           name: ${{ steps.tag_name.outputs.tag_name }}
           prerelease: false
           tag_name: ${{ steps.tag_name.outputs.tag_name }}
@@ -75,6 +82,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
         with:
           draft: false
+          generate_release_notes: true
           name: ${{ steps.tag_name.outputs.tag_name }}
           prerelease: false
           tag_name: ${{ steps.tag_name.outputs.tag_name }}
