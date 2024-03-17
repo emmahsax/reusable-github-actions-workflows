@@ -11,31 +11,25 @@ on:
         required: false
         type: string
       go_version:
-        default: 1.21
+        default: 1.22
         description: The version of Go to build
         required: false
         type: number
       tag_name:
-        default: ""
         description: The name of the tag/release to use
-        required: false
+        required: true
         type: string
       upload:
+        default: false
         description: Whether to upload assets during the release
-        required: true
+        required: false
         type: boolean
-    outputs:
-      tag_name:
-        description: The tag name the release is under
-        value: ${{ jobs.main.outputs.tag_name }}
 
 permissions:
   contents: write
 
 jobs:
   main:
-    outputs:
-      tag_name: ${{ steps.tag_name.outputs.tag_name }}
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Code
@@ -52,16 +46,6 @@ jobs:
       - name: Go Build
         run: ${{ inputs.build_command }}
 
-      - name: Set Tag Name
-        id: tag_name
-        run: |
-          if [[ "${{ inputs.tag_name }}" == "" ]]; then
-            CALCULATED_SHA=$(git rev-parse --short ${{ github.sha }})
-            echo "tag_name=$CALCULATED_SHA" >> $GITHUB_OUTPUT
-          else
-            echo "tag_name=${{ inputs.tag_name }}" >> $GITHUB_OUTPUT
-          fi
-
       - if: ${{ inputs.upload }}
         name: GitHub Release & Upload Assets
         uses: softprops/action-gh-release@v2
@@ -71,9 +55,9 @@ jobs:
           draft: false
           files: ${{ inputs.files }}
           generate_release_notes: true
-          name: ${{ steps.tag_name.outputs.tag_name }}
+          name: ${{ inputs.tag_name }}
           prerelease: false
-          tag_name: ${{ steps.tag_name.outputs.tag_name }}
+          tag_name: ${{ inputs.tag_name }}
 
       - if: ${{ inputs.upload == false }}
         name: GitHub Release
@@ -83,6 +67,6 @@ jobs:
         with:
           draft: false
           generate_release_notes: true
-          name: ${{ steps.tag_name.outputs.tag_name }}
+          name: ${{ inputs.tag_name }}
           prerelease: false
-          tag_name: ${{ steps.tag_name.outputs.tag_name }}
+          tag_name: ${{ inputs.tag_name }}
