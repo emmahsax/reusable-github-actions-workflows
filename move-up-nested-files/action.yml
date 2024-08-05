@@ -13,6 +13,6 @@ runs:
   using: composite
   steps:
     - run: |
-        mv ${{ inputs.nested_dir }}* ${{ inputs.dir }}
+        rsync -a --remove-source-files ${{ inputs.nested_dir }} ${{ inputs.dir }}
         rm -r ${{ inputs.dir }}${{ inputs.nested_dir }} || echo 0
       shell: bash
