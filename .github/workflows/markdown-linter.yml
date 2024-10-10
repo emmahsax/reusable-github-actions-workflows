@@ -56,7 +56,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'fail'
         name: Pull Request Failure Comment
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           comment_tag: markdown-linter
           message: |
@@ -64,7 +64,7 @@ jobs:
 
       - if: github.event_name == 'pull_request' && inputs.notify_pr == 'true' && env.status == 'success'
         name: Pull Request Success Comment
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           comment_tag: markdown-linter
           message: |
