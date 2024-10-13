@@ -58,7 +58,7 @@ jobs:
         name: Pull Request Failure Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment_tag: markdown-linter
+          comment-tag: markdown-linter
           message: |
             :warning: Latest run of Markdown Linter **failed**: ${{ steps.job_log_url.outputs.html_url }}
 
@@ -66,6 +66,6 @@ jobs:
         name: Pull Request Success Comment
         uses: thollander/actions-comment-pull-request@v3
         with:
-          comment_tag: markdown-linter
+          comment-tag: markdown-linter
           message: |
             :white_check_mark: Latest run of Markdown Linter **succeeded**: ${{ steps.job_log_url.outputs.html_url }}
