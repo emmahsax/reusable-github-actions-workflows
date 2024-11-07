@@ -59,9 +59,7 @@ jobs:
           gofmt-flags: '-l -d'
 
       - if: ${{ inputs.staticcheck }}
-        name: Go Staticcheck
-        uses: dominikh/staticcheck-action@master
-        with:
-          install-go: true
-          cache-key: ${{ inputs.go_version }}
-          working-directory: ./
+        name: Run Staticcheck
+        run: |
+          go install honnef.co/go/tools/cmd/staticcheck@latest
+          staticcheck ./...
