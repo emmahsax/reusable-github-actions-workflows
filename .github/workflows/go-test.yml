@@ -60,8 +60,8 @@ jobs:
 
       - if: ${{ inputs.staticcheck }}
         name: Go Staticcheck
-        uses: dominikh/staticcheck-action@v1.3.1
+        uses: dominikh/staticcheck-action@main
         with:
-          install-go: false
+          install-go: true
           cache-key: ${{ inputs.go_version }}
           working-directory: ./
