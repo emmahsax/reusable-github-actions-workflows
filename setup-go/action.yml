@@ -24,4 +24,4 @@ runs:
       uses: arduino/setup-task@v1
 
     - name: Setup Ko
-      uses: ko-build/setup-ko@v0.7
+      uses: ko-build/setup-ko@v0.8
